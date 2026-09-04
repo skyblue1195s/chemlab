@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #020617;
+    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+/* Cyber & Immersive Glow Effects */
+.shadow-cyan-glow {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+}
+
+.shadow-cyan-glow-sm {
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.25);
+}
+
+.shadow-viewport-inner {
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
+}
+
+/* Custom scrollbar for immersive look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}

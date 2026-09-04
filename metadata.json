@@ -1,0 +1,6 @@
+{
+  "name": "Hóa Học Trực Quan 3D & Thí Nghiệm Ảo",
+  "description": "Nền tảng học Hóa học THPT (Lớp 10, 11, 12 GDPT 2026) với mô phỏng 3D tương tác, bảng tuần hoàn động, thí nghiệm ảo, gamification và trợ lý AI 24/7.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

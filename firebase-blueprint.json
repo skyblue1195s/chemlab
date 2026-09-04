@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile storing XP, level, daily streaks, quests progress and settings.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User Gmail address."
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "User display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "User profile avatar URL."
+        },
+        "xp": {
+          "type": "number",
+          "description": "Total chemistry experience points."
+        },
+        "level": {
+          "type": "number",
+          "description": "Current chemistry master level."
+        },
+        "streakDays": {
+          "type": "number",
+          "description": "Daily study streak in consecutive days."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Title achieved by the user."
+        },
+        "completedQuests": {
+          "type": "array",
+          "description": "List of completed quest IDs."
+        },
+        "claimedDailyQuests": {
+          "type": "array",
+          "description": "List of claimed daily quest IDs."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last profile update timestamp."
+        }
+      },
+      "required": ["uid", "email", "xp", "level"]
+    },
+    "UserStudyNote": {
+      "title": "UserStudyNote",
+      "description": "Chemistry notes and formula memos saved by the student.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique note identifier."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner UID."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 150,
+          "description": "Note title."
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 5000,
+          "description": "Note body markdown content."
+        },
+        "topic": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Topic or category tag."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated timestamp."
+        }
+      },
+      "required": ["id", "userId", "title", "content"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Individual student account profile and progress."
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": "UserStudyNote",
+      "description": "Personal chemistry study notes saved by the student."
+    }
+  }
+}

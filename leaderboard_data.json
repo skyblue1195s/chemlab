@@ -1,0 +1,87 @@
+[
+  {
+    "id": "chem_user_1",
+    "name": "Nguyễn Minh Khang",
+    "avatar": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80",
+    "title": "Chuyên Gia Hóa Học 12",
+    "grade": 12,
+    "xp": 1420,
+    "streak": 18,
+    "completedCount": 24,
+    "badge": "Vua Cân Bằng",
+    "rank": 1
+  },
+  {
+    "id": "chem_user_2",
+    "name": "Trần Bảo Ngọc",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    "title": "Nhà Giả Kim 3D Xuất Sắc",
+    "grade": 11,
+    "xp": 1280,
+    "streak": 14,
+    "completedCount": 20,
+    "badge": "Nhà Giả Kim 3D",
+    "rank": 2
+  },
+  {
+    "id": "chem_user_3",
+    "name": "Lê Hoàng Long",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+    "title": "Bậc Thầy Axit-Bazơ",
+    "grade": 11,
+    "xp": 960,
+    "streak": 10,
+    "completedCount": 16,
+    "badge": "Bậc Thầy Axit-Bazơ",
+    "rank": 3
+  },
+  {
+    "id": "chem_user_me",
+    "name": "Bạn (Học viên)",
+    "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&auto=format&fit=crop&q=80",
+    "title": "Bậc Thầy Axit-Bazơ",
+    "grade": 10,
+    "xp": 850,
+    "streak": 5,
+    "completedCount": 3,
+    "badge": "Học Viên Tích Cực",
+    "lastActive": "2026-09-04T08:04:15.702Z",
+    "rank": 4
+  },
+  {
+    "id": "chem_user_4",
+    "name": "Phạm Thảo Vy",
+    "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+    "title": "Thám Tử Bảng Tuần Hoàn",
+    "grade": 10,
+    "xp": 780,
+    "streak": 8,
+    "completedCount": 12,
+    "badge": "Thám Tử Tuần Hoàn",
+    "rank": 5
+  },
+  {
+    "id": "chem_user_5",
+    "name": "Đỗ Quang Minh",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+    "title": "Chiến Binh THPT 2026",
+    "grade": 12,
+    "xp": 650,
+    "streak": 7,
+    "completedCount": 11,
+    "badge": "Chiến Binh THPT",
+    "rank": 6
+  },
+  {
+    "id": "chem_user_6",
+    "name": "Vũ Thu Trang",
+    "avatar": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80",
+    "title": "Tập Sự Phòng Lab",
+    "grade": 10,
+    "xp": 520,
+    "streak": 6,
+    "completedCount": 9,
+    "badge": "Tập Sự Phòng Lab",
+    "rank": 7
+  }
+]
