@@ -360,6 +360,37 @@ ${context ? `Ngữ cảnh học sinh đang xem: ${context}` : ""}`;
   }
 });
 
+// Explicit SEO Endpoints for Search Engine Crawlers
+app.get("/robots.txt", (_req, res) => {
+  const filePath = path.join(process.cwd(), "public", "robots.txt");
+  if (fs.existsSync(filePath)) {
+    res.type("text/plain");
+    res.sendFile(filePath);
+  } else {
+    res.type("text/plain").send("User-agent: *\nAllow: /\n");
+  }
+});
+
+app.get("/sitemap.xml", (_req, res) => {
+  const filePath = path.join(process.cwd(), "public", "sitemap.xml");
+  if (fs.existsSync(filePath)) {
+    res.type("application/xml");
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send("Sitemap not found");
+  }
+});
+
+app.get("/manifest.json", (_req, res) => {
+  const filePath = path.join(process.cwd(), "public", "manifest.json");
+  if (fs.existsSync(filePath)) {
+    res.type("application/json");
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send("Manifest not found");
+  }
+});
+
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

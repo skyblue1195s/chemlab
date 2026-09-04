@@ -37,10 +37,28 @@ import {
   Cloud,
   LogIn,
 } from "lucide-react";
+import { usePageSEO } from "./hooks/usePageSEO";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("molecules");
+  const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes("periodic")) return "periodic-table";
+      if (hash.includes("lab")) return "virtual-lab";
+      if (hash.includes("reaction")) return "reactions";
+      if (hash.includes("curriculum")) return "curriculum";
+      if (hash.includes("thpt") || hash.includes("exam")) return "thpt-practice";
+      if (hash.includes("gamification") || hash.includes("arena")) return "gamification";
+      if (hash.includes("community") || hash.includes("forum")) return "community";
+      if (hash.includes("ai") || hash.includes("tutor")) return "ai-tutor";
+    }
+    return "molecules";
+  });
   const [currentGrade, setCurrentGrade] = useState<GradeLevel>(10);
+
+  // Dynamic SEO meta, titles, and Open Graph management
+  usePageSEO(activeTab, currentGrade);
+
   const [completedConcepts, setCompletedConcepts] = useState<string[]>([
     "g10-c1-1",
   ]);
@@ -348,18 +366,155 @@ export default function App() {
         {activeTab === "ai-tutor" && <AITutorChat />}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 px-4 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-          <p>© 2026 Hóa Học Trực Quan 3D • Thiết kế bám sát Chương trình GDPT 2026 (Kết nối tri thức • Cánh Diều • Chân trời sáng tạo)</p>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-400">
-            <VisitorStatsBadge variant="footer" currentGrade={currentGrade} />
-            <span className="hidden sm:inline">•</span>
-            <span>Mô phỏng Three.js</span>
-            <span>•</span>
-            <span>Mô hình Bohr</span>
-            <span>•</span>
-            <span>Trợ lý Gemini AI</span>
+      {/* SEO & Semantic Footer */}
+      <footer className="border-t border-slate-900 bg-[#020617] py-10 px-4 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Main Footer Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Column 1: App Identity & Description */}
+            <div className="md:col-span-2 space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-cyan-400 flex items-center justify-center font-black text-black text-base shadow-[0_0_12px_rgba(34,211,238,0.5)]">
+                  C
+                </div>
+                <div>
+                  <span className="font-black text-white text-sm tracking-tight">
+                    CHEM<span className="text-cyan-400">LAB</span> INTERACTIVE 3D
+                  </span>
+                  <span className="text-[9px] ml-2 px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono">
+                    GDPT 2026
+                  </span>
+                </div>
+              </div>
+              <p className="text-slate-400 text-xs leading-relaxed max-w-lg">
+                Nền tảng Hóa học số và thí nghiệm ảo 3D hàng đầu dành cho học sinh THPT (Lớp 10, 11, 12).
+                Tích hợp mô phỏng phân tử 3D tương tác, bảng tuần hoàn 118 nguyên tố, 5 đề thi tốt nghiệp THPT 2026 chuẩn 125 câu và gia sư ChemBot AI giải đáp 24/7.
+              </p>
+              <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-400">
+                <VisitorStatsBadge variant="footer" currentGrade={currentGrade} />
+              </div>
+            </div>
+
+            {/* Column 2: Khám Phá Công Cụ Học Tập */}
+            <div className="space-y-2.5">
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider">
+                Công Cụ Trực Quan 3D
+              </h4>
+              <ul className="space-y-1.5 text-xs text-slate-400">
+                <li>
+                  <button
+                    onClick={() => setActiveTab("molecules")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Mô phỏng phân tử 3D
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("periodic-table")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Bảng tuần hoàn 118 nguyên tố
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("virtual-lab")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Phòng thí nghiệm ảo phản ứng
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("reactions")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Động học & Enthalpy nhiệt động
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("ai-tutor")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Gia sư ChemBot AI 24/7
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: Luyện Thi & Thi Đua */}
+            <div className="space-y-2.5">
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider">
+                Luyện Thi & Thi Đua
+              </h4>
+              <ul className="space-y-1.5 text-xs text-slate-400">
+                <li>
+                  <button
+                    onClick={() => setActiveTab("thpt-practice")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • 5 Đề thi thử THPT GDPT 2026 (125 câu)
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("curriculum")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Sơ đồ tư duy Lớp 10, 11, 12
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("gamification")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Bảng xếp hạng & Gamification
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveTab("community")}
+                    className="hover:text-cyan-400 transition-colors text-left"
+                  >
+                    • Diễn đàn hỏi đáp Hóa học THPT
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar: Curricula & Copyright */}
+          <div className="pt-6 border-t border-slate-900/80 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
+            <p>
+              © 2026 <strong className="text-slate-400 font-medium">Hóa Học Trực Quan 3D</strong> • Bám sát 3 bộ sách giáo khoa:{" "}
+              <span className="text-slate-400">Kết nối tri thức</span> •{" "}
+              <span className="text-slate-400">Cánh Diều</span> •{" "}
+              <span className="text-slate-400">Chân trời sáng tạo</span>
+            </p>
+            <div className="flex items-center gap-3">
+              <a
+                href="/robots.txt"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-slate-400 underline underline-offset-2"
+              >
+                robots.txt
+              </a>
+              <span>•</span>
+              <a
+                href="/sitemap.xml"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-slate-400 underline underline-offset-2"
+              >
+                sitemap.xml
+              </a>
+              <span>•</span>
+              <span className="text-cyan-500/80 font-mono">PWA Ready</span>
+            </div>
           </div>
         </div>
       </footer>

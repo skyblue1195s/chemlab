@@ -1,0 +1,7 @@
+# robots.txt for Hóa Học Trực Quan 3D & Thí Nghiệm Ảo (GDPT 2026)
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Host and Sitemap
+Sitemap: https://ais-dev-oijdh7dcd2vnwluwrfzkpc-752649796277.asia-east1.run.app/sitemap.xml
