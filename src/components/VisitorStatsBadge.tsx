@@ -197,18 +197,18 @@ export const VisitorStatsBadge: React.FC<VisitorStatsBadgeProps> = ({
       <button
         id="header-visitor-count-badge"
         onClick={() => setIsDetailsOpen(true)}
-        className={`flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-400 text-xs font-bold text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.15)] transition-all hover:scale-105 active:scale-95 group ${className}`}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-400 text-xs font-bold text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.15)] transition-all hover:scale-105 active:scale-95 group shrink-0 whitespace-nowrap ${className}`}
         title="Số người truy cập thực tế • Nhấp để xem phân tích chi tiết"
       >
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center shrink-0">
           <Users className="w-3.5 h-3.5 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
           <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
           <span className="font-mono text-white text-xs font-black tracking-tight">
             {stats.total.toLocaleString("vi-VN")}
           </span>
-          <span className="text-[10px] text-cyan-400/90 font-semibold hidden md:inline">
+          <span className="text-[10px] text-cyan-400/90 font-semibold hidden sm:inline whitespace-nowrap">
             lượt thực tế
           </span>
         </div>

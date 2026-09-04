@@ -200,7 +200,7 @@ export const CommunityForum: React.FC<{
   };
 
   return (
-    <div id="community-forum-module" className="flex flex-col gap-6 w-full max-w-6xl mx-auto">
+    <div id="community-forum-module" className="flex flex-col gap-6 w-full">
       {/* Header Bar */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/50 border border-slate-800 p-5 rounded-3xl shadow-xl">
         <div>

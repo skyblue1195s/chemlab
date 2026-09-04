@@ -218,7 +218,7 @@ export const THPTExamPractice: React.FC<THPTExamPracticeProps> = ({
   return (
     <div
       id="thpt-exam-practice-hub"
-      className="flex flex-col gap-6 w-full max-w-7xl mx-auto"
+      className="flex flex-col gap-6 w-full"
     >
       {/* Top Banner & Exam Selector Bar */}
       <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-3xl backdrop-blur-md shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
