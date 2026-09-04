@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ActiveTab, GradeLevel } from "../types";
+import { useLanguage } from "../i18n/LanguageContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import {
   Rotate3d,
   Atom,
@@ -50,6 +52,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
   setActiveTab,
   currentGrade,
 }) => {
+  const { t, language } = useLanguage();
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -58,102 +61,102 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
   const menuGroups: MenuGroup[] = [
     {
       id: "group-simulation",
-      label: "Mô Phỏng & Thí Nghiệm",
-      shortLabel: "Thí Nghiệm",
+      label: t.nav.groupSimulation,
+      shortLabel: t.nav.groupSimulationShort,
       icon: FlaskConical,
-      description: "Không gian thí nghiệm ảo tương tác và mô phỏng hạt vi mô",
+      description: t.nav.groupSimulationDesc,
       defaultTab: "molecules",
       items: [
         {
           id: "molecules",
-          label: "Mô Phỏng Phân Tử 3D",
-          shortLabel: "Phân tử 3D",
-          description: "Khảo sát cấu trúc hình học VSEPR, orbital và góc liên kết",
+          label: t.nav.molecules,
+          shortLabel: t.nav.moleculesShort,
+          description: t.nav.moleculesDesc,
           icon: Rotate3d,
-          badge: "3D Tương tác",
+          badge: t.nav.moleculesBadge,
           badgeStyle: "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30",
         },
         {
           id: "periodic-table",
-          label: "Bảng Tuần Hoàn Động",
-          shortLabel: "Bảng tuần hoàn",
-          description: "118 nguyên tố, cấu hình electron & quy luật biến thiên",
+          label: t.nav.periodicTable,
+          shortLabel: t.nav.periodicTableShort,
+          description: t.nav.periodicTableDesc,
           icon: Atom,
-          badge: "118 Nguyên tố",
+          badge: t.nav.periodicTableBadge,
           badgeStyle: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
         },
         {
           id: "virtual-lab",
-          label: "Phòng Thí Nghiệm Ảo",
-          shortLabel: "Phòng lab ảo",
-          description: "Pha chế dung dịch, kiểm tra kết tủa & hiện tượng quang phổ",
+          label: t.nav.virtualLab,
+          shortLabel: t.nav.virtualLabShort,
+          description: t.nav.virtualLabDesc,
           icon: FlaskConical,
-          badge: "+XP Thực nghiệm",
+          badge: t.nav.virtualLabBadge,
           badgeStyle: "bg-amber-500/15 text-amber-400 border border-amber-500/30",
         },
         {
           id: "reactions",
-          label: "Mô Phỏng Phản Ứng Hóa Học",
-          shortLabel: "Phản ứng hóa học",
-          description: "Cân bằng oxi hóa - khử, nhiệt hóa & Le Chatelier",
+          label: t.nav.reactions,
+          shortLabel: t.nav.reactionsShort,
+          description: t.nav.reactionsDesc,
           icon: Zap,
-          badge: "Động học & Cân bằng",
+          badge: t.nav.reactionsBadge,
           badgeStyle: "bg-purple-500/15 text-purple-400 border border-purple-500/30",
         },
       ],
     },
     {
       id: "group-curriculum",
-      label: "Học Tập & Luyện Thi",
-      shortLabel: "Luyện Thi GDPT",
+      label: t.nav.groupCurriculum,
+      shortLabel: t.nav.groupCurriculumShort,
       icon: BookOpen,
-      description: "Chương trình GDPT 2026 và bộ đề thi tốt nghiệp THPT chuẩn quy chế",
+      description: t.nav.groupCurriculumDesc,
       defaultTab: "curriculum",
       items: [
         {
           id: "curriculum",
-          label: "Chương Trình GDPT 2026",
-          shortLabel: "Lý thuyết & Bài tập",
-          description: `Khung bài học Lớp ${currentGrade} (Kết nối tri thức, Cánh Diều, Chân trời sáng tạo)`,
+          label: t.nav.curriculum,
+          shortLabel: t.nav.curriculumShort,
+          description: t.nav.curriculumDesc.replace("{grade}", currentGrade.toString()),
           icon: BookOpen,
-          badge: `Lớp ${currentGrade}`,
+          badge: t.nav.curriculumBadge.replace("{grade}", currentGrade.toString()),
           badgeStyle: "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40",
         },
         {
           id: "thpt-practice",
-          label: "Luyện Thi Tốt Nghiệp THPT 2026",
-          shortLabel: "Đề thi THPT 2026",
-          description: "Bộ 05 đề thực chiến cấu trúc 3 phần mới theo quy chuẩn Bộ GD&ĐT",
+          label: t.nav.thptPractice,
+          shortLabel: t.nav.thptPracticeShort,
+          description: t.nav.thptPracticeDesc,
           icon: GraduationCap,
-          badge: "CẤU TRÚC 3 PHẦN",
+          badge: t.nav.thptPracticeBadge,
           badgeStyle: "bg-rose-500 text-white font-bold shadow-[0_0_8px_rgba(244,63,94,0.4)]",
         },
       ],
     },
     {
       id: "group-community",
-      label: "Đấu Trường & Cộng Đồng",
-      shortLabel: "Đấu Trường & Hỏi Đáp",
+      label: t.nav.groupCommunity,
+      shortLabel: t.nav.groupCommunityShort,
       icon: Trophy,
-      description: "Hệ thống nhiệm vụ game hóa RPG, câu đố và diễn đàn chia sẻ",
+      description: t.nav.groupCommunityDesc,
       defaultTab: "gamification",
       items: [
         {
           id: "gamification",
-          label: "Đấu Trường & Nhiệm Vụ RPG",
-          shortLabel: "Gamification & RPG",
-          description: "Cây kỹ năng hóa học, 24 nhiệm vụ ngày, mini-game & bảng vàng thi đua",
+          label: t.nav.gamification,
+          shortLabel: t.nav.gamificationShort,
+          description: t.nav.gamificationDesc,
           icon: Trophy,
-          badge: "Cây kỹ năng RPG",
+          badge: t.nav.gamificationBadge,
           badgeStyle: "bg-amber-500/15 text-amber-300 border border-amber-500/30",
         },
         {
           id: "community",
-          label: "Diễn Đàn Thảo Luận GDPT",
-          shortLabel: "Diễn đàn hỏi đáp",
-          description: "Cộng đồng hỏi đáp bài tập, chia sẻ kinh nghiệm học tập & thi cử",
+          label: t.nav.community,
+          shortLabel: t.nav.communityShort,
+          description: t.nav.communityDesc,
           icon: MessageSquare,
-          badge: "Hỏi đáp 24/7",
+          badge: t.nav.communityBadge,
           badgeStyle: "bg-blue-500/15 text-blue-300 border border-blue-500/30",
         },
       ],
@@ -263,7 +266,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
                         <span>{group.label}</span>
                       </div>
                       <span className="text-[10px] text-slate-400 font-mono">
-                        {group.items.length} phân hệ
+                        {group.items.length} {language === "en" ? "modules" : "phân hệ"}
                       </span>
                     </div>
 
@@ -336,11 +339,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
                 ? "bg-cyan-400 text-black border-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.5)]"
                 : "bg-cyan-500/10 text-cyan-300 hover:text-white hover:bg-cyan-500/20 border-cyan-500/30"
             }`}
-            title="Trợ lý gia sư AI ChemBot 24/7"
+            title={t.header.quickAiTitle}
           >
             <Bot className="w-4 h-4 text-cyan-400 shrink-0" />
-            <span className="hidden sm:inline whitespace-nowrap">Trợ Lý ChemBot AI</span>
-            <span className="sm:hidden whitespace-nowrap">ChemBot</span>
+            <span className="hidden sm:inline whitespace-nowrap">{t.header.quickAi}</span>
+            <span className="sm:hidden whitespace-nowrap">{t.header.quickAiShort}</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block shadow-[0_0_6px_rgba(52,211,153,0.8)] shrink-0" />
           </button>
 
@@ -382,7 +385,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             {/* Sub-menu Pills: Instant 1-click switching within the active group */}
             <div className="flex items-center gap-1.5 shrink-0 overflow-x-auto">
               <span className="text-[10px] text-slate-400 font-mono hidden md:inline uppercase mr-1 whitespace-nowrap">
-                Phân hệ:
+                {t.nav.ribbonSection}
               </span>
               {activeGroup.items.map((item) => {
                 const ItemIcon = item.icon;
@@ -460,7 +463,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
           })}
 
           {/* ChemBot AI item in mobile drawer */}
-          <div className="pt-2 border-t border-slate-800">
+          <div className="pt-2 border-t border-slate-800 space-y-3">
             <button
               id="mobile-sub-ai-tutor"
               onClick={() => handleSelectTab("ai-tutor")}
@@ -472,12 +475,15 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             >
               <div className="flex items-center gap-2.5">
                 <Bot className="w-4 h-4" />
-                <span>Trợ Lý Gia Sư AI ChemBot 24/7</span>
+                <span>{t.header.quickAi}</span>
               </div>
               <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-400 text-black">
-                Trực tuyến
+                {t.common.online}
               </span>
             </button>
+
+            {/* Language Switcher in Mobile Drawer */}
+            <LanguageSwitcher variant="mobile" />
           </div>
         </div>
       )}

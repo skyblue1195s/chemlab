@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { GradeLevel } from "../types";
+import { Language } from "../i18n/translations";
 
 interface SEOConfig {
   title: string;
@@ -8,7 +9,7 @@ interface SEOConfig {
   tabHash?: string;
 }
 
-const TAB_SEO_MAP: Record<string, SEOConfig> = {
+const TAB_SEO_MAP_VI: Record<string, SEOConfig> = {
   molecules: {
     title: "Mô Phỏng Phân Tử 3D Tương Tác | Hóa Học Trực Quan 3D",
     description: "Khám phá cấu trúc không gian 3D tương tác của các phân tử hóa học (H2O, CH4, Benzen, Este, Polyme...). Xoay 360 độ, kiểm tra liên kết hóa học và góc liên kết theo chương trình GDPT 2026.",
@@ -65,17 +66,82 @@ const TAB_SEO_MAP: Record<string, SEOConfig> = {
   },
 };
 
-export function usePageSEO(activeTab: string, currentGrade: GradeLevel) {
+const TAB_SEO_MAP_EN: Record<string, SEOConfig> = {
+  molecules: {
+    title: "3D Molecular Simulation | ChemLab Interactive 3D",
+    description: "Explore interactive 3D spatial structures of chemical molecules (H2O, CH4, Benzene, Esters, Polymers). 360-degree rotation, VSEPR geometry, and bond angles.",
+    keywords: "3d molecular simulation, vsepr geometry, chemical bonding, bond angles, high school chemistry",
+    tabHash: "#molecules-3d",
+  },
+  "periodic-table": {
+    title: "Dynamic Periodic Table of Elements | ChemLab Interactive 3D",
+    description: "Look up 118 chemical elements with IUPAC data: electronegativity, atomic radius, ionization energy, electron configuration, and real-world applications.",
+    keywords: "periodic table 3d, chemical elements, electron configuration, electronegativity, iupac elements",
+    tabHash: "#periodic-table",
+  },
+  "virtual-lab": {
+    title: "Safe 3D Virtual Chemistry Lab | ChemLab Interactive 3D",
+    description: "Conduct virtual chemical experiments safely: acid-base titrations, precipitation reactions, redox reactions, and organic silver mirror tests.",
+    keywords: "virtual chemistry lab, lab simulations, acid base titration, chemical experiments, lab safety",
+    tabHash: "#virtual-lab",
+  },
+  reactions: {
+    title: "Reaction & Thermodynamic Simulator | ChemLab Interactive 3D",
+    description: "Observe molecular reaction mechanisms, standard enthalpy changes (ΔrH°298), reaction rates, and Le Chatelier equilibrium shifts.",
+    keywords: "chemical reaction simulator, enthalpy change, chemical equilibrium, le chatelier, reaction kinetics",
+    tabHash: "#reactions-simulator",
+  },
+  curriculum: {
+    title: "Chemistry Curriculum & Study Notes | ChemLab Interactive 3D",
+    description: "Comprehensive Grade 10, 11, and 12 Chemistry roadmaps with interactive mindmaps, core concepts, and key exercises.",
+    keywords: "grade 10 chemistry, grade 11 chemistry, grade 12 chemistry, high school syllabus, chemistry roadmaps",
+    tabHash: "#curriculum-gdpt",
+  },
+  "thpt-practice": {
+    title: "National Graduation Exam Practice | ChemLab Interactive 3D",
+    description: "Comprehensive exam training with detailed explanations across multiple-choice, true/false, and short-answer questions.",
+    keywords: "chemistry exam practice, graduation exam training, national chemistry test, multiple choice chemistry",
+    tabHash: "#thpt-exam-practice",
+  },
+  gamification: {
+    title: "RPG Arena & Golden Leaderboard | ChemLab Interactive 3D",
+    description: "Conquer daily chemistry quests, fast equation balancing, element quizzes, and climb the national leaderboard.",
+    keywords: "chemistry leaderboard, chemistry games, gamified science, equation balancing, element quiz",
+    tabHash: "#gamification-arena",
+  },
+  community: {
+    title: "Discussion & Homework Forum | ChemLab Interactive 3D",
+    description: "Connect with students and teachers: solve homework problems, share exam tactics, and discuss advanced chemistry.",
+    keywords: "chemistry forum, chemistry homework help, science community, chemistry questions",
+    tabHash: "#chemistry-forum",
+  },
+  "ai-tutor": {
+    title: "ChemBot AI - 24/7 Smart Chemistry Assistant | ChemLab Interactive 3D",
+    description: "24/7 AI tutor for balancing redox reactions, analyzing organic mechanisms, and solving chemistry problems step-by-step.",
+    keywords: "chemistry ai tutor, chembot ai, solve chemistry with ai, smart science assistant",
+    tabHash: "#ai-tutor",
+  },
+};
+
+export function usePageSEO(activeTab: string, currentGrade: GradeLevel, language: Language = "vi") {
   useEffect(() => {
-    const config = TAB_SEO_MAP[activeTab] || {
-      title: "Hóa Học Trực Quan 3D & Thí Nghiệm Ảo",
-      description: "Nền tảng học Hóa học THPT (Lớp 10, 11, 12 GDPT 2026) với mô phỏng 3D tương tác, bảng tuần hoàn động, thí nghiệm ảo, gamification và trợ lý AI 24/7.",
-      keywords: "hóa học 3d, thí nghiệm ảo, bảng tuần hoàn, gdpt 2026",
+    const map = language === "en" ? TAB_SEO_MAP_EN : TAB_SEO_MAP_VI;
+    const defaultTitle = language === "en" ? "ChemLab Interactive 3D" : "Hóa Học Trực Quan 3D & Thí Nghiệm Ảo";
+    const defaultDesc =
+      language === "en"
+        ? "Interactive 3D chemistry platform with molecular simulations, dynamic periodic table, virtual lab, gamification, and AI tutor."
+        : "Nền tảng học Hóa học THPT (Lớp 10, 11, 12 GDPT 2026) với mô phỏng 3D tương tác, bảng tuần hoàn động, thí nghiệm ảo, gamification và trợ lý AI 24/7.";
+
+    const config = map[activeTab] || {
+      title: defaultTitle,
+      description: defaultDesc,
+      keywords: "chemistry 3d, virtual lab, periodic table",
       tabHash: "",
     };
 
     // Update Document Title
-    const fullTitle = `${config.title} (Khối ${currentGrade})`;
+    const gradeLabel = language === "en" ? `(Grade ${currentGrade})` : `(Khối ${currentGrade})`;
+    const fullTitle = `${config.title} ${gradeLabel}`;
     document.title = fullTitle;
 
     // Update Meta Description
@@ -87,7 +153,7 @@ export function usePageSEO(activeTab: string, currentGrade: GradeLevel) {
     // Update Meta Keywords if available
     let metaKeywords = document.querySelector('meta[name="keywords"]');
     if (metaKeywords && config.keywords) {
-      metaKeywords.setAttribute("content", `${config.keywords}, hóa học khối ${currentGrade}`);
+      metaKeywords.setAttribute("content", `${config.keywords}`);
     }
 
     // Update Open Graph tags dynamically
@@ -120,5 +186,5 @@ export function usePageSEO(activeTab: string, currentGrade: GradeLevel) {
         // Fallback for sandboxed iframe if history API is restricted
       }
     }
-  }, [activeTab, currentGrade]);
+  }, [activeTab, currentGrade, language]);
 }

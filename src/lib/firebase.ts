@@ -18,6 +18,7 @@ import {
   collection,
 } from "firebase/firestore";
 import firebaseConfig from "../../firebase-applet-config.json";
+export { firebaseConfig };
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { User } from "firebase/auth";
-import { signInWithGoogle, signOutUser, FirebaseUserProfile } from "../lib/firebase";
+import { signInWithGoogle, signOutUser, FirebaseUserProfile, firebaseConfig } from "../lib/firebase";
 import confetti from "canvas-confetti";
 import {
   X,
@@ -15,6 +15,9 @@ import {
   AlertCircle,
   Mail,
   UserCheck,
+  ExternalLink,
+  Copy,
+  Check,
 } from "lucide-react";
 
 interface AuthModalProps {
@@ -36,8 +39,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [unauthorizedDomain, setUnauthorizedDomain] = useState<string | null>(null);
+  const [hasCopied, setHasCopied] = useState<boolean>(false);
 
   if (!isOpen) return null;
+
+  const handleCopyDomain = () => {
+    const domain =
+      unauthorizedDomain ||
+      (typeof window !== "undefined"
+        ? window.location.hostname
+        : "chemlab-lovat.vercel.app");
+    navigator.clipboard.writeText(domain);
+    setHasCopied(true);
+    setTimeout(() => setHasCopied(false), 2500);
+  };
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -51,13 +67,31 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       }, 1000);
     } catch (err: any) {
       console.error("Sign in failed:", err);
-      // Friendly message
-      if (err?.code === "auth/popup-closed-by-user") {
-        setErrorMsg("Cửa sổ đăng nhập đã được đóng lại. Vui lòng thử lại khi sẵn sàng.");
+      // Friendly message & unauthorized domain detection
+      if (
+        err?.code === "auth/unauthorized-domain" ||
+        err?.message?.includes("unauthorized-domain")
+      ) {
+        const detectedDomain =
+          typeof window !== "undefined"
+            ? window.location.hostname
+            : "chemlab-lovat.vercel.app";
+        setUnauthorizedDomain(detectedDomain);
+        setErrorMsg("auth/unauthorized-domain");
+      } else if (err?.code === "auth/popup-closed-by-user") {
+        setUnauthorizedDomain(null);
+        setErrorMsg(
+          "Cửa sổ đăng nhập đã được đóng lại. Vui lòng thử lại khi sẵn sàng."
+        );
       } else if (err?.code === "auth/cancelled-popup-request") {
+        setUnauthorizedDomain(null);
         setErrorMsg("Yêu cầu đăng nhập trước đó đã bị hủy.");
       } else {
-        setErrorMsg(err?.message || "Đã xảy ra lỗi khi đăng nhập bằng Google. Vui lòng thử lại.");
+        setUnauthorizedDomain(null);
+        setErrorMsg(
+          err?.message ||
+            "Đã xảy ra lỗi khi đăng nhập bằng Google. Vui lòng thử lại."
+        );
       }
     } finally {
       setIsLoading(false);
@@ -212,13 +246,81 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
             </div>
 
-            {/* Error banner if any */}
-            {errorMsg && (
+            {/* Error banner or Unauthorized Domain Resolution Card */}
+            {errorMsg === "auth/unauthorized-domain" ? (
+              <div className="p-4 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex flex-col gap-3 animate-in fade-in duration-200">
+                <div className="flex items-start gap-2.5">
+                  <AlertCircle className="w-5 h-5 shrink-0 text-amber-400 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-amber-300 text-sm">
+                      Chưa cấp quyền tên miền (Unauthorized Domain)
+                    </h4>
+                    <p className="text-slate-300 text-xs mt-1 leading-relaxed">
+                      Để đăng nhập Google trên tên miền này, bạn cần thêm hostname vào mục <strong>Authorized domains</strong> trong Firebase Console của dự án.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Domain copy box */}
+                <div className="bg-slate-950/80 border border-amber-500/30 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-[10px] uppercase font-mono text-slate-400">Tên miền:</span>
+                    <span className="font-mono font-bold text-cyan-300 truncate">
+                      {unauthorizedDomain || "chemlab-lovat.vercel.app"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyDomain}
+                    className="shrink-0 px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-[11px] font-medium flex items-center gap-1.5 transition-colors"
+                  >
+                    {hasCopied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-emerald-400 font-semibold">Đã sao chép</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Sao chép</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* 3 Steps Guide */}
+                <div className="space-y-1.5 text-[11px] text-slate-300 pt-1 border-t border-amber-500/20">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-amber-400 shrink-0">1.</span>
+                    <span>Mở <strong>Firebase Console</strong> ➔ <strong>Authentication</strong> ➔ <strong>Settings</strong>.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-amber-400 shrink-0">2.</span>
+                    <span>Tại mục <strong>Authorized domains</strong>, nhấn nút <strong>Add domain</strong>.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-amber-400 shrink-0">3.</span>
+                    <span>Dán chính xác <code className="bg-slate-900 px-1 py-0.5 rounded text-amber-300 font-mono">{unauthorizedDomain || "chemlab-lovat.vercel.app"}</code> (không kèm https:// hay /) ➔ nhấn <strong>Save</strong>.</span>
+                  </div>
+                </div>
+
+                {/* Direct Link to Firebase Console */}
+                <a
+                  href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/authentication/settings`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.3)] transition-all"
+                >
+                  <span>Mở Cài Đặt Firebase Console (Miền được ủy quyền)</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            ) : errorMsg ? (
               <div className="p-3 rounded-2xl bg-rose-950/40 border border-rose-700/50 text-rose-300 text-xs flex items-start gap-2.5">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
                 <span>{errorMsg}</span>
               </div>
-            )}
+            ) : null}
 
             {/* Feature Perks Checklist */}
             <div className="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex flex-col gap-2.5 text-xs">

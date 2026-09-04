@@ -39,8 +39,11 @@ import {
   Mail,
 } from "lucide-react";
 import { usePageSEO } from "./hooks/usePageSEO";
+import { useLanguage } from "./i18n/LanguageContext";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
 
 export default function App() {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
     if (typeof window !== "undefined" && window.location.hash) {
       const hash = window.location.hash.toLowerCase();
@@ -58,7 +61,7 @@ export default function App() {
   const [currentGrade, setCurrentGrade] = useState<GradeLevel>(10);
 
   // Dynamic SEO meta, titles, and Open Graph management
-  usePageSEO(activeTab, currentGrade);
+  usePageSEO(activeTab, currentGrade, language);
 
   const [completedConcepts, setCompletedConcepts] = useState<string[]>([
     "g10-c1-1",
@@ -199,7 +202,7 @@ export default function App() {
             <Sparkles className="w-4 h-4 text-cyan-300" />
           </div>
           <div className="text-xs">
-            <span className="font-bold text-cyan-400 block tracking-wide">+{xpToast.xp} XP KINH NGHIỆM</span>
+            <span className="font-bold text-cyan-400 block tracking-wide">+{xpToast.xp} {t.header.xpGained}</span>
             <span className="text-[11px] text-slate-300">{xpToast.label}</span>
           </div>
         </div>
@@ -223,7 +226,7 @@ export default function App() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">
-                Mô phỏng phân tử 3D • Thí nghiệm tương tác • Cây kỹ năng RPG • ChemBot AI
+                {t.header.tagline}
               </p>
             </div>
           </div>
@@ -233,7 +236,7 @@ export default function App() {
             {/* Level & XP with Mini Progress Bar */}
             <div className="flex flex-col items-end shrink-0">
               <div className="flex items-center gap-2 whitespace-nowrap">
-                <span className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">CẤP {userStats.level}</span>
+                <span className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">{t.header.level} {userStats.level}</span>
                 <span className="text-cyan-400 font-mono text-xs font-bold">{userStats.xp} XP</span>
               </div>
               <div className="w-24 sm:w-28 h-1 bg-slate-800 rounded-full overflow-hidden mt-1">
@@ -248,7 +251,7 @@ export default function App() {
             <div className="flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 px-3 py-1.5 rounded-full text-xs font-bold text-orange-400 shrink-0 whitespace-nowrap">
               <span className="text-orange-400 text-sm leading-none">🔥</span>
               <span className="font-mono">{userStats.streakDays}</span>
-              <span className="text-orange-400/80 text-[11px] font-medium hidden sm:inline whitespace-nowrap">ngày streak</span>
+              <span className="text-orange-400/80 text-[11px] font-medium hidden sm:inline whitespace-nowrap">{t.header.streak}</span>
             </div>
 
             {/* Total Visitors Counter Badge */}
@@ -260,7 +263,7 @@ export default function App() {
                 id="header-btn-login-gmail"
                 onClick={() => setIsAuthModalOpen(true)}
                 className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-[0_0_15px_rgba(251,191,36,0.4)] transition-all animate-pulse shrink-0 whitespace-nowrap"
-                title="Đăng nhập tài khoản Gmail để lưu điểm XP và tiến độ"
+                title={t.header.loginTitle}
               >
                 <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
                   <path fill="#020617" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -268,14 +271,14 @@ export default function App() {
                   <path fill="#020617" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
                   <path fill="#020617" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                 </svg>
-                <span className="whitespace-nowrap">Đăng nhập Gmail</span>
+                <span className="whitespace-nowrap">{t.header.loginGmail}</span>
               </button>
             ) : (
               <button
                 id="header-btn-user-profile"
                 onClick={() => setIsAuthModalOpen(true)}
                 className="flex items-center gap-2 p-1 pl-1.5 pr-3 rounded-full bg-slate-900 border border-emerald-500/40 hover:border-emerald-400 transition-all text-xs group shrink-0 whitespace-nowrap"
-                title="Đã đăng nhập - Xem chi tiết tài khoản & Cloud Sync"
+                title={t.header.syncTitle}
               >
                 {currentUser.photoURL ? (
                   <img
@@ -291,7 +294,7 @@ export default function App() {
                 )}
                 <div className="flex flex-col items-start leading-tight">
                   <span className="font-bold text-white max-w-[85px] truncate text-[11px] group-hover:text-emerald-300 transition-colors whitespace-nowrap">
-                    {currentUser.displayName?.split(" ").slice(-1)[0] || "Học viên"}
+                    {currentUser.displayName?.split(" ").slice(-1)[0] || t.header.student}
                   </span>
                   <span className="text-[9px] text-emerald-400 flex items-center gap-0.5 whitespace-nowrap">
                     <Cloud className="w-2.5 h-2.5 shrink-0" /> Cloud Sync
@@ -313,10 +316,13 @@ export default function App() {
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  Lớp {g}
+                  {t.header.gradePrefix} {g}
                 </button>
               ))}
             </div>
+
+            {/* Language Switcher EN / VN */}
+            <LanguageSwitcher variant="header" />
           </div>
         </div>
       </header>
@@ -388,8 +394,7 @@ export default function App() {
                 </div>
               </div>
               <p className="text-slate-400 text-xs leading-relaxed max-w-lg">
-                Nền tảng Hóa học số và thí nghiệm ảo 3D hàng đầu dành cho học sinh THPT (Lớp 10, 11, 12).
-                Tích hợp mô phỏng phân tử 3D tương tác, bảng tuần hoàn 118 nguyên tố, 5 đề thi tốt nghiệp THPT 2026 chuẩn 125 câu và gia sư ChemBot AI giải đáp 24/7.
+                {t.footer.aboutDesc}
               </p>
               <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-400">
                 <VisitorStatsBadge variant="footer" currentGrade={currentGrade} />
@@ -399,7 +404,7 @@ export default function App() {
             {/* Column 2: Khám Phá Công Cụ Học Tập */}
             <div className="space-y-2.5">
               <h4 className="text-white font-bold text-xs uppercase tracking-wider">
-                Công Cụ Trực Quan 3D
+                {t.footer.toolsTitle}
               </h4>
               <ul className="space-y-1.5 text-xs text-slate-400">
                 <li>
@@ -407,7 +412,7 @@ export default function App() {
                     onClick={() => setActiveTab("molecules")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Mô phỏng phân tử 3D
+                    • {t.footer.molecules3D}
                   </button>
                 </li>
                 <li>
@@ -415,7 +420,7 @@ export default function App() {
                     onClick={() => setActiveTab("periodic-table")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Bảng tuần hoàn 118 nguyên tố
+                    • {t.footer.periodicTable}
                   </button>
                 </li>
                 <li>
@@ -423,7 +428,7 @@ export default function App() {
                     onClick={() => setActiveTab("virtual-lab")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Phòng thí nghiệm ảo phản ứng
+                    • {t.footer.virtualLab}
                   </button>
                 </li>
                 <li>
@@ -431,7 +436,7 @@ export default function App() {
                     onClick={() => setActiveTab("reactions")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Động học & Enthalpy nhiệt động
+                    • {t.footer.reactionSim}
                   </button>
                 </li>
                 <li>
@@ -439,7 +444,7 @@ export default function App() {
                     onClick={() => setActiveTab("ai-tutor")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Gia sư ChemBot AI 24/7
+                    • {t.footer.aiTutor}
                   </button>
                 </li>
               </ul>
@@ -448,7 +453,7 @@ export default function App() {
             {/* Column 3: Luyện Thi & Thi Đua */}
             <div className="space-y-2.5">
               <h4 className="text-white font-bold text-xs uppercase tracking-wider">
-                Luyện Thi & Thi Đua
+                {t.footer.examsTitle}
               </h4>
               <ul className="space-y-1.5 text-xs text-slate-400">
                 <li>
@@ -456,7 +461,7 @@ export default function App() {
                     onClick={() => setActiveTab("thpt-practice")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • 5 Đề thi thử THPT GDPT 2026 (125 câu)
+                    • {t.footer.thptExams}
                   </button>
                 </li>
                 <li>
@@ -464,7 +469,7 @@ export default function App() {
                     onClick={() => setActiveTab("curriculum")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Sơ đồ tư duy Lớp 10, 11, 12
+                    • {t.footer.curriculumMaps}
                   </button>
                 </li>
                 <li>
@@ -472,7 +477,7 @@ export default function App() {
                     onClick={() => setActiveTab("gamification")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Bảng xếp hạng & Gamification
+                    • {t.footer.leaderboard}
                   </button>
                 </li>
                 <li>
@@ -480,7 +485,7 @@ export default function App() {
                     onClick={() => setActiveTab("community")}
                     className="hover:text-cyan-400 transition-colors text-left"
                   >
-                    • Diễn đàn hỏi đáp Hóa học THPT
+                    • {t.footer.forum}
                   </button>
                 </li>
               </ul>
@@ -490,21 +495,18 @@ export default function App() {
           {/* Bottom Bar: Curricula & Copyright */}
           <div className="pt-6 border-t border-slate-900/80 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
             <p>
-              © 2026 <strong className="text-slate-400 font-medium">Hóa Học Trực Quan 3D</strong> • Bám sát 3 bộ sách giáo khoa:{" "}
-              <span className="text-slate-400">Kết nối tri thức</span> •{" "}
-              <span className="text-slate-400">Cánh Diều</span> •{" "}
-              <span className="text-slate-400">Chân trời sáng tạo</span>
+              {t.footer.copyright}
             </p>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-slate-400">
               <span className="flex items-center gap-1.5">
-                <span className="text-slate-500">Tác giả:</span>
+                <span className="text-slate-500">{t.footer.author}:</span>
                 <strong className="text-cyan-300 font-semibold">Điều Trần</strong>
               </span>
               <span className="text-slate-700">•</span>
               <a
                 href="mailto:khacdieu1195@gmail.com"
                 className="flex items-center gap-1.5 text-slate-400 hover:text-cyan-300 transition-colors"
-                title="Gửi email liên hệ tác giả"
+                title={t.footer.contactEmail}
               >
                 <Mail className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                 <span className="underline underline-offset-2 font-mono text-[11px]">khacdieu1195@gmail.com</span>
